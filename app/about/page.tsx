@@ -43,25 +43,23 @@ export default function AboutPage() {
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="prose prose-lg max-w-none">
-            <h2 className="text-3xl font-bold text-foreground mb-8">나의 이야기</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-8">최고의 순간을 경험한 사람이 최고의 순간을 만듭니다.</h2>
 
             <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
-                5년 전, 친구의 프로포즈를 도와주면서 시작된 이 일은 이제 제 인생의 가장 소중한 사명이 되었습니다. 그
-                순간 두 사람의 눈에서 흘러내린 감동의 눈물을 보며, 저는 이 일이 단순한 이벤트 기획이 아닌 '사랑의 역사를
-                만드는 일'임을 깨달았습니다.
+               호텔리어로서는 섬세한 디테일을, 놀이동산 공연 감독으로서는 상상을 현실로 만드는 기획력을 익혔습니다.<br />
+               늘 사람들에게 잊지 못할 '순간'을 선물하는 것이 저의 일이었습니다.
               </p>
 
               <p>
-                지금까지 100여 쌍의 커플과 함께 특별한 순간을 만들어왔습니다. 각각의 프로포즈는 모두 달랐지만, 공통점이
-                있었습니다. 바로 '진심'이었습니다. 진심으로 사랑하는 마음, 진심으로 행복하게 해주고 싶은 마음, 그리고 그
-                진심을 완벽하게 전달하고 싶은 마음 말입니다.
+                그러던 어느 날, 남편에게 받은 프로포즈는 제 인생의 방향을 바꾸는 최고의 순간이 되었습니다.<br />
+                제가 느낀 벅찬 행복을 다른 분들께도 온전히 선물하고 싶다는 새로운 사명이 생긴 것입니다.
               </p>
 
               <p>
-                저는 단순히 화려한 이벤트를 만드는 것이 아닙니다. 두 사람만의 특별한 이야기를 찾아내고, 그 이야기가 가장
-                아름답게 표현될 수 있는 순간을 디자인합니다. 때로는 소박하지만 깊은 감동을, 때로는 웅장하고 드라마틱한
-                순간을 만들어내며 각 커플에게 가장 완벽한 프로포즈를 선사합니다.
+                이후 수많은 커플들의 프로포즈를 도우며 쌓은 노하우를 더 체계적으로 나누고자 이 웹사이트를 열었습니다.<br />
+                호텔의 디테일, 공연의 연출력, 그리고 사랑의 감동을 직접 경험한 사람으로서<br />
+                두 분의 이야기가 가장 빛나는 순간을 디자인해 드리겠습니다.
               </p>
             </div>
           </div>
@@ -97,7 +95,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-3 gap-8">
             {values.map((value, index) => (
               <Card key={index} className="p-8 text-center">
-                <CardContent className="pt-6">
+                <CardContent>
                   <h3 className="text-xl font-bold text-foreground mb-4">{value.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{value.description}</p>
                 </CardContent>
@@ -109,16 +107,45 @@ export default function AboutPage() {
 
       {/* Affiliation Section */}
       <section className="py-24 bg-muted/30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-8">소속 및 자격</h2>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-foreground mb-8 text-center">
+            소속
+          </h2>
 
-          <Card className="p-8">
-              <div className="space-y-4">
-                <p className="text-muted-foreground leading-relaxed text-center">
-                  현재 서울 강남구에 위치한 프리미엄 이벤트 기획사 '로맨틱 모먼츠'의 수석 플래너로 활동하고 있으며, 개인
-                  브랜드 'OOO 플래너'를 통해 더욱 세심하고 개인화된 프로포즈 서비스를 제공하고 있습니다.
-                </p>
-              </div>
+          <Card className="p-8 md:p-10">
+            <div className="space-y-8">
+              {/* 수정된 부분: md:text-lg 클래스를 제거하여 원래 글자 크기로 복원 */}
+              <p className="text-muted-foreground leading-relaxed text-left">
+                저는 현재{' '}
+                <a
+                  href="https://smartstore.naver.com/1566266"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-foreground hover:underline transition-colors"
+                >
+                  서울요트
+                </a>{' '}
+                소속 프로포즈 디렉터로 활동하며, 최고의 순간을 만들어드리고 있습니다.
+              </p>
+              <p className="text-muted-foreground leading-relaxed text-left">
+                서울요트는 단순한 요트 업체가 아닌, 프로포즈 전문가 집단입니다. 이벤트
+                기획부터 실행까지 책임지는{' '}
+                <strong className="font-semibold text-foreground">'사랑 그리기' 팀</strong>이
+                상주하여, 요트 위에서의 모든 순간이 드라마처럼 펼쳐지도록 완벽하게
+                연출합니다.
+              </p>
+              <p className="text-muted-foreground leading-relaxed text-left">
+                또한, 플라워 디자인 스튜디오{' '}
+                <strong className="font-semibold text-foreground">
+                  '플라워썸(Flowersome)'
+                </strong>
+                을 직접 운영하는 것이 가장 큰 강점입니다. 이를 통해 고객이 꿈꾸는
+                분위기와 스타일에 맞춰 가장 신선하고 아름다운 꽃으로 공간을 디자인할
+                수 있으며, 세상에 단 하나뿐인 부케 제작도 가능합니다. 이 모든
+                전문가들이 오직 두 분의 프로포즈를 위해 함께하기에, 차원이 다른 감동과
+                만족을 선사할 것을 약속드립니다.
+              </p>
+            </div>
           </Card>
         </div>
       </section>
