@@ -8,7 +8,7 @@ import { Header } from "@/components/header"
 import { Suspense } from "react"
 
 export const metadata: Metadata = {
-  title: "OOO 프로포즈 플래너 - 특별한 순간을 위한 완벽한 기획",
+  title: "김은아 프로포즈 플래너",
   description:
     "서울에서 가장 특별한 프로포즈를 만들어드립니다. 맞춤형 프로포즈 기획부터 실행까지, 당신만의 완벽한 순간을 위해.",
   generator: "v0.app",
