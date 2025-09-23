@@ -30,7 +30,7 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="py-24 bg-muted/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="section-title font-bold text-foreground mb-6">안녕하세요, OOO 플래너입니다</h1>
+          <h1 className="section-title font-bold text-foreground mb-6">안녕하세요, 김은아 플래너입니다</h1>
           <p className="text-xl text-muted-foreground leading-relaxed mb-8">
             저는 사랑하는 두 사람의 특별한 순간을 만들어가는 일에 깊은 보람과 책임감을 느끼는 프로포즈 전문
             플래너입니다.
@@ -113,20 +113,12 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-foreground mb-8">소속 및 자격</h2>
 
           <Card className="p-8">
-            <CardContent className="pt-6">
               <div className="space-y-4">
-                <div className="flex flex-wrap justify-center gap-2 mb-6">
-                  <Badge variant="secondary">한국이벤트기획협회 정회원</Badge>
-                  <Badge variant="secondary">웨딩플래너 자격증</Badge>
-                  <Badge variant="secondary">이벤트기획사 2급</Badge>
-                </div>
-
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed text-center">
                   현재 서울 강남구에 위치한 프리미엄 이벤트 기획사 '로맨틱 모먼츠'의 수석 플래너로 활동하고 있으며, 개인
                   브랜드 'OOO 플래너'를 통해 더욱 세심하고 개인화된 프로포즈 서비스를 제공하고 있습니다.
                 </p>
               </div>
-            </CardContent>
           </Card>
         </div>
       </section>

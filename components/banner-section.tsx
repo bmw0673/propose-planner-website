@@ -1,6 +1,6 @@
 export function BannerSection() {
   return (
-    <section className="bg-primary text-primary-foreground py-4 border-b">
+    <section className="bg-primary text-primary-foreground py-4 border-b pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-sm md:text-base font-medium">

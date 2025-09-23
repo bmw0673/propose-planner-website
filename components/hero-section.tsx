@@ -1,7 +1,14 @@
+'use client'
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Play } from "lucide-react"
 
 export function HeroSection() {
+  // ContactSection 이동 함수
+  const handleContactScroll = () => {
+    const el = document.getElementById("contact-section")
+    if (el) el.scrollIntoView({ behavior: "smooth" })
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video/Image Placeholder */}
@@ -28,7 +35,12 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <Button size="lg" className="text-lg px-8 py-6">
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6 cursor-pointer"
+              type="button"
+              onClick={handleContactScroll}
+            >
               상담 문의하기
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

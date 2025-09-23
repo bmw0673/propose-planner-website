@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Pin } from "lucide-react"
+import Link from "next/link"
 
 export default function AnnouncementsPage() {
   const announcements = [
@@ -91,26 +92,28 @@ export default function AnnouncementsPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-6">
             {announcements.map((announcement) => (
-              <Card key={announcement.id} className="hover:shadow-lg transition-shadow duration-300">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-3">
-                        {announcement.pinned && <Pin className="h-4 w-4 text-accent" />}
-                        <Badge className={getTypeColor(announcement.type)}>{announcement.type}</Badge>
-                        <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                          <Calendar className="h-4 w-4" />
-                          <span>{announcement.date}</span>
+              <Link key={announcement.id} href={`/announcements/${announcement.id}`} className="block">
+                <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-3">
+                          {announcement.pinned && <Pin className="h-4 w-4 text-accent" />}
+                          <Badge className={getTypeColor(announcement.type)}>{announcement.type}</Badge>
+                          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+                            <Calendar className="h-4 w-4" />
+                            <span>{announcement.date}</span>
+                          </div>
                         </div>
+                        <CardTitle className="text-xl font-bold text-foreground">{announcement.title}</CardTitle>
                       </div>
-                      <CardTitle className="text-xl font-bold text-foreground">{announcement.title}</CardTitle>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{announcement.content}</p>
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed">{announcement.content}</p>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 

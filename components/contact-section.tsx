@@ -31,7 +31,7 @@ export function ContactSection() {
   }
 
   return (
-    <section className="py-24 bg-background">
+    <section id="contact-section" className="py-24 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="section-title font-bold text-foreground mb-6">특별한 순간을 함께 만들어보세요</h2>
@@ -151,27 +151,6 @@ export function ContactSection() {
                       24시간 이내 답변
                     </p>
                     <p className="font-medium text-foreground">contact@oooplanner.com</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground mb-2">오프라인 상담</h3>
-                    <p className="text-muted-foreground mb-2">
-                      서울시 강남구 테헤란로
-                      <br />
-                      예약 후 방문 가능
-                    </p>
-                    <Button variant="outline" size="sm" className="mt-2 bg-transparent">
-                      위치 보기
-                    </Button>
                   </div>
                 </div>
               </CardContent>

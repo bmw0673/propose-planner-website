@@ -43,7 +43,12 @@ export function Header() {
 
           {/* Admin Login Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              className="cursor-pointer"
+              onClick={() => window.location.href = "/login"}
+            >
               관리자 로그인
             </Button>
           </div>

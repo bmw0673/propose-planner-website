@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Clock, Users, Star, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export default function ServicesPage() {
   const services = [
@@ -172,7 +173,9 @@ export default function ServicesPage() {
                       상담 문의
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
-                    <Button variant="outline">자세히 보기</Button>
+                    <Link href={`/services/${service.id}`} className="flex-1">
+                      <Button variant="outline" className="w-full">자세히 보기</Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
