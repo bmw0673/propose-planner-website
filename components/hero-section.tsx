@@ -1,6 +1,7 @@
 'use client'
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Play } from "lucide-react"
+import Link from 'next/link'
 
 export function HeroSection() {
   // ContactSection 이동 함수
@@ -44,10 +45,16 @@ export function HeroSection() {
               상담 문의하기
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent">
-              <Play className="mr-2 h-5 w-5" />
-              포트폴리오 보기
-            </Button>
+            <Link href="/services">
+              <Button
+                variant="default"
+                size="lg"
+                className="text-lg px-8 py-6 cursor-pointer transition-colors bg-primary text-primary-foreground hover:bg-primary/80"
+              >
+                프로포즈 보기
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
