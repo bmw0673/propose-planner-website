@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Heart, Star, Users } from "lucide-react"
+import Link from 'next/link';
 
 export function FeaturedSection() {
   const features = [
@@ -44,7 +45,7 @@ export function FeaturedSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Features */}
         <div className="text-center mb-16">
-          <h2 className="section-title font-bold text-foreground mb-6">왜 OOO 플래너를 선택해야 할까요?</h2>
+          <h2 className="section-title font-bold text-foreground mb-6">왜 김은아 플래너를 선택해야 할까요?</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             수많은 커플들의 특별한 순간을 만들어온 경험과 노하우로 당신만의 완벽한 프로포즈를 선사합니다.
           </p>
@@ -79,7 +80,7 @@ export function FeaturedSection() {
                 <div className="text-sm text-accent font-medium mb-2">{post.date}</div>
                 <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">{post.title}</h3>
                 <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
-                <Button variant="ghost" size="sm" className="p-0 h-auto">
+                <Button variant="ghost" size="sm" className="p-0 h-auto cursor-pointer">
                   더 읽기 <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
               </CardContent>
@@ -88,10 +89,16 @@ export function FeaturedSection() {
         </div>
 
         <div className="text-center">
-          <Button variant="outline" size="lg">
-            모든 블로그 포스트 보기
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <Link href="/blog">
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6 cursor-pointer"
+              type="button"
+            >
+              모든 블로그 포스트 보기
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

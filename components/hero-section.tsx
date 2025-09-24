@@ -1,14 +1,9 @@
 'use client'
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Play } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import Link from 'next/link'
 
 export function HeroSection() {
-  // ContactSection 이동 함수
-  const handleContactScroll = () => {
-    const el = document.getElementById("contact-section")
-    if (el) el.scrollIntoView({ behavior: "smooth" })
-  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -36,15 +31,16 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <Link href="/consultation">
             <Button
               size="lg"
               className="text-lg px-8 py-6 cursor-pointer"
               type="button"
-              onClick={handleContactScroll}
             >
-              상담 문의하기
+              상담신청 이동
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
+            </Link>
             <Link href="/services">
               <Button
                 variant="default"

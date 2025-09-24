@@ -1,66 +1,106 @@
 "use client"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { Input } from "@/components/ui/input"
+
+import type React from "react"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-const schema = z.object({
-  email: z.string().email({ message: "이메일 형식이 올바르지 않습니다." }),
-  password: z.string().min(6, { message: "비밀번호는 6자 이상이어야 합니다." })
-})
-
-type LoginForm = z.infer<typeof schema>
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import Link from "next/link"
 
 export default function LoginPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting }
-  } = useForm<LoginForm>({
-    resolver: zodResolver(schema)
+  const router = useRouter()
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
   })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  const onSubmit = async (data: LoginForm) => {
-    // TODO: 실제 로그인 처리
-    alert(JSON.stringify(data))
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError("")
+
+    // Mock admin credentials - in real app, this would be server-side authentication
+    if (formData.email === "admin@planner.com" && formData.password === "admin123") {
+      // Set admin status in localStorage
+      localStorage.setItem("isAdmin", "true")
+      localStorage.setItem("adminEmail", formData.email)
+
+      console.log("[v0] Admin login successful")
+
+      // Redirect to consultation page or previous page
+      const returnUrl = new URLSearchParams(window.location.search).get("returnUrl")
+      router.push(returnUrl || "/consultation")
+    } else {
+      setError("이메일 또는 비밀번호가 올바르지 않습니다.")
+    }
+
+    setIsLoading(false)
+  }
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>로그인</CardTitle>
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-primary">관리자 로그인</CardTitle>
+          <CardDescription>김은아 플래너 관리자 계정으로 로그인하세요</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">이메일</Label>
               <Input
+                id="email"
                 type="email"
-                placeholder="이메일"
-                {...register("email")}
-                autoComplete="email"
-                disabled={isSubmitting}
+                placeholder="admin@planner.com"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                required
               />
-              {errors.email && <p className="text-destructive text-sm mt-1">{errors.email.message}</p>}
             </div>
-            <div>
+            <div className="space-y-2">
+              <Label htmlFor="password">비밀번호</Label>
               <Input
+                id="password"
                 type="password"
-                placeholder="비밀번호"
-                {...register("password")}
-                autoComplete="current-password"
-                disabled={isSubmitting}
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={(e) => handleInputChange("password", e.target.value)}
+                required
               />
-              {errors.password && <p className="text-destructive text-sm mt-1">{errors.password.message}</p>}
             </div>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              로그인
+
+            {error && <div className="text-sm text-destructive text-center">{error}</div>}
+
+            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+              {isLoading ? "로그인 중..." : "로그인"}
             </Button>
+
+            {/* <div className="text-center text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
+              <p className="font-medium mb-1">데모 계정</p>
+              <p>이메일: admin@planner.com</p>
+              <p>비밀번호: admin123</p>
+            </div> */}
+
+            <div className="text-center text-sm text-muted-foreground">
+              <Link href="/" className="text-primary hover:underline">
+                홈으로 돌아가기
+              </Link>
+            </div>
           </form>
         </CardContent>
       </Card>
-    </main>
+    </div>
   )
 }

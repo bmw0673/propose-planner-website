@@ -1,161 +1,97 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Phone, Mail, MapPin, Send } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Phone, MessageCircle, Instagram, Send } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  })
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission
-    console.log("Form submitted:", formData)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
-  }
-
   return (
-    <section id="contact-section" className="py-24 bg-muted/30">
+    <section className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="section-title font-bold text-foreground mb-6">특별한 순간을 함께 만들어보세요</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             당신의 이야기를 들려주세요. 완벽한 프로포즈를 위한 첫 걸음을 함께 시작하겠습니다.
           </p>
+          <div className="mt-8">
+            <Link href="/consultation">
+              <Button
+                size="lg"
+                className="text-lg px-8 py-6 cursor-pointer"
+                type="button"
+              >
+                상담신청 이동
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold">상담 문의</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                      이름 *
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="홍길동"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">
-                      연락처 *
-                    </label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                      placeholder="010-1234-5678"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                    이메일 *
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="example@email.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                    문의 내용 *
-                  </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    placeholder="프로포즈 계획, 예산, 선호하는 장소나 스타일 등 자세한 내용을 알려주세요."
-                  />
-                </div>
-
-                <Button type="submit" size="lg" className="w-full">
-                  <Send className="mr-2 h-5 w-5" />
-                  상담 문의 보내기
-                </Button>
-              </form>
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {/* 전화상담 카드 */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Phone className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="font-bold text-foreground mb-3 text-xl">전화 상담</h3>
+              <p className="text-muted-foreground mb-4">
+                평일 10:00 - 19:00
+                <br />
+                주말 및 공휴일 예약 상담 가능
+              </p>
+              <p className="font-medium text-foreground mb-4">010-5849-0776</p>
+              <Button className="w-full bg-accent hover:bg-accent/90 cursor-pointer" onClick={() => window.open("tel:010-5849-0776")}>
+                전화걸기
+              </Button>
             </CardContent>
           </Card>
 
-          {/* Contact Info */}
-          <div className="space-y-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground mb-2">전화 상담</h3>
-                    <p className="text-muted-foreground mb-2">
-                      평일 10:00 - 19:00
-                      <br />
-                      주말 및 공휴일 예약 상담 가능
-                    </p>
-                    <p className="font-medium text-foreground">010-1234-5678</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* 카카오톡 상담 카드 */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <MessageCircle className="h-8 w-8 text-yellow-600" />
+              </div>
+              <h3 className="font-bold text-foreground mb-3 text-xl">카카오톡 상담</h3>
+              <p className="text-muted-foreground mb-4">
+                실시간 채팅 상담
+                <br />
+                빠른 답변 가능
+              </p>
+              <p className="font-medium text-foreground mb-4">@eunaplanner</p>
+              <Button
+                className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-900 cursor-pointer"
+                onClick={() => window.open("https://pf.kakao.com/_프로포즈플래너", "_blank")}
+              >
+                카톡 상담
+              </Button>
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground mb-2">이메일 문의</h3>
-                    <p className="text-muted-foreground mb-2">
-                      24시간 접수 가능
-                      <br />
-                      24시간 이내 답변
-                    </p>
-                    <p className="font-medium text-foreground">contact@oooplanner.com</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          {/* 인스타그램 상담 카드 */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Instagram className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-bold text-foreground mb-3 text-xl">인스타그램 DM</h3>
+              <p className="text-muted-foreground mb-4">
+                포트폴리오 확인 및 상담
+                <br />
+                실제 사례 사진 제공
+              </p>
+              <p className="font-medium text-foreground mb-4">@euna.planner</p>
+              <Button
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white cursor-pointer"
+                onClick={() => window.open("https://instagram.com/euna.planner", "_blank")}
+              >
+                인스타 DM
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

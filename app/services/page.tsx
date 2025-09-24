@@ -106,7 +106,7 @@ export default function ServicesPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="section-title font-bold text-foreground mb-6">프로포즈 서비스</h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            당신의 이야기와 꿈을 현실로 만들어드리는 다양한 프로포즈 패키지를 준비했습니다. 각 패키지는 완전 맞춤형으로
+            당신의 이야기와 꿈을 현실로 만들어드리는 다양한 프로포즈 패키지를 준비했습니다. 각 패키지는 맞춤형으로
             조정 가능합니다.
           </p>
         </div>
@@ -181,20 +181,6 @@ export default function ServicesPage() {
               </Card>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-muted/30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-6">원하는 패키지가 없으신가요?</h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            모든 프로포즈는 100% 맞춤형으로 기획됩니다. 당신만의 특별한 아이디어를 들려주세요.
-          </p>
-          <Button size="lg" className="text-lg px-8 py-6">
-            맞춤 상담 받기
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
         </div>
       </section>
     </main>

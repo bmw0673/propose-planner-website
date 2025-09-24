@@ -1,19 +1,26 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    const adminStatus = localStorage.getItem("isAdmin") === "true"
+    setIsAdmin(adminStatus)
+  }, [])
 
   const navigation = [
     { name: "Home", href: "/" },
-    { name: "자기소개", href: "/about" },
-    { name: "프로포즈 종류", href: "/services" },
+    { name: "소개", href: "/about" },
+    { name: "프로포즈", href: "/services" },
     { name: "블로그", href: "/blog" },
     { name: "공지사항", href: "/announcements" },
+    { name: "상담신청", href: "/consultation" },
   ]
 
   return (
@@ -41,16 +48,11 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Admin Login Button */}
+          {/* Admin Login/Logout Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button
-              variant="outline"
-              size="sm"
-              className="cursor-pointer"
-              onClick={() => window.location.href = "/login"}
-            >
-              관리자 로그인
-            </Button>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/login">관리자 로그인</Link>
+              </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -76,9 +78,10 @@ export function Header() {
                 </Link>
               ))}
               <div className="px-3 py-2">
-                <Button variant="outline" size="sm" className="w-full bg-transparent">
-                  관리자 로그인
-                </Button>
+                  <Button variant="outline" size="sm" className="w-full bg-transparent" asChild>
+                    <Link href="/login">관리자 로그인</Link>
+                  </Button>
+
               </div>
             </div>
           </div>
