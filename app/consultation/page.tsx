@@ -23,6 +23,7 @@ export default function ConsultationPage() {
       isPrivate: true,
       hasPassword: true,
       views: 12,
+      answer: null,
     },
     {
       id: 2,
@@ -33,6 +34,7 @@ export default function ConsultationPage() {
       isPrivate: false,
       hasPassword: false,
       views: 8,
+      answer: "레스토랑 예약 및 이벤트 플랜 안내드렸습니다.",
     },
     {
       id: 3,
@@ -43,6 +45,7 @@ export default function ConsultationPage() {
       isPrivate: true,
       hasPassword: true,
       views: 15,
+      answer: null,
     },
     {
       id: 4,
@@ -53,6 +56,7 @@ export default function ConsultationPage() {
       isPrivate: true,
       hasPassword: true,
       views: 6,
+      answer: null,
     },
     {
       id: 5,
@@ -63,6 +67,7 @@ export default function ConsultationPage() {
       isPrivate: false,
       hasPassword: false,
       views: 20,
+      answer: null,
     },
     {
       id: 6,
@@ -73,6 +78,7 @@ export default function ConsultationPage() {
       isPrivate: true,
       hasPassword: true,
       views: 9,
+      answer: null,
     },
     {
       id: 7,
@@ -83,6 +89,7 @@ export default function ConsultationPage() {
       isPrivate: false,
       hasPassword: false,
       views: 18,
+      answer: null,
     },
     {
       id: 8,
@@ -93,14 +100,13 @@ export default function ConsultationPage() {
       isPrivate: true,
       hasPassword: true,
       views: 11,
+      answer: null,
     },
   ]
 
   const totalPages = Math.ceil(consultations.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const currentConsultations = consultations.slice(startIndex, startIndex + itemsPerPage)
-
-  const eventTypes = ["전체", "야외 프로포즈", "실내 프로포즈", "테마 프로포즈", "홈 프로포즈"]
 
   return (
     <main className="min-h-screen pt-16">
@@ -109,14 +115,8 @@ export default function ConsultationPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="section-title font-bold text-foreground mb-6">상담신청</h1>
           <p className="text-xl text-muted-foreground leading-relaxed mb-8">
-            프로포즈 상담을 신청하고 다른 분들의 상담 내용도 확인해보세요.
+            성공적인 프로포즈의 첫 걸음, 맞춤 상담을 신청하세요
           </p>
-
-          {/* Search */}
-          <div className="max-w-md mx-auto relative mb-8">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input placeholder="상담 내용 검색..." className="pl-10 pr-4 py-3" />
-          </div>
 
           {/* Write Button */}
           <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
@@ -125,19 +125,6 @@ export default function ConsultationPage() {
               상담신청 작성하기
             </Link>
           </Button>
-        </div>
-      </section>
-
-      {/* Event Type Filter */}
-      <section className="py-8 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {eventTypes.map((type, index) => (
-              <Button key={index} variant={index === 0 ? "default" : "outline"} size="sm" className="rounded-full">
-                {type}
-              </Button>
-            ))}
-          </div>
         </div>
       </section>
 

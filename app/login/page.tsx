@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import { supabase } from "@/lib/supabase-client"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -24,21 +25,20 @@ export default function LoginPage() {
     setIsLoading(true)
     setError("")
 
-    // Mock admin credentials - in real app, this would be server-side authentication
-    if (formData.email === "admin@planner.com" && formData.password === "admin123") {
-      // Set admin status in localStorage
-      localStorage.setItem("isAdmin", "true")
-      localStorage.setItem("adminEmail", formData.email)
+    // Supabase 클라이언트에서 직접 로그인 (세션 자동 관리)
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    })
 
-      console.log("[v0] Admin login successful")
-
-      // Redirect to consultation page or previous page
-      const returnUrl = new URLSearchParams(window.location.search).get("returnUrl")
-      router.push(returnUrl || "/consultation")
-    } else {
-      setError("이메일 또는 비밀번호가 올바르지 않습니다.")
+    if (error) {
+      setError(error.message)
+      setIsLoading(false)
+      return
     }
 
+    // 성공 시 관리자 권한 부여
+    router.push("/admin")
     setIsLoading(false)
   }
 

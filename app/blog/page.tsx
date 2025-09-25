@@ -80,25 +80,6 @@ export default function BlogPage() {
           <p className="text-xl text-muted-foreground leading-relaxed mb-8">
             완벽한 프로포즈를 위한 유용한 정보와 아이디어, 그리고 실제 성공 사례들을 공유합니다.
           </p>
-
-          {/* Search */}
-          <div className="max-w-md mx-auto relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input placeholder="블로그 검색..." className="pl-10 pr-4 py-3" />
-          </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section className="py-8 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {categories.map((category, index) => (
-              <Button key={index} variant={index === 0 ? "default" : "outline"} size="sm" className="rounded-full">
-                {category}
-              </Button>
-            ))}
-          </div>
         </div>
       </section>
 

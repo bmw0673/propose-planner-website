@@ -1,16 +1,28 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabase-client"
 import Link from "next/link"
+
+// UI 컴포넌트 import
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog"
 import { ArrowLeft, Calendar, Eye, Lock, Phone, Clock, User, MessageSquare } from "lucide-react"
 
 interface ConsultationData {
@@ -25,6 +37,7 @@ interface ConsultationData {
   content: string
   phoneAvailable: boolean
   unavailableHours?: string
+  answer?: string | null
 }
 
 export default function ConsultationDetailPage() {
@@ -35,6 +48,10 @@ export default function ConsultationDetailPage() {
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
+  // draftAnswer: 모달 입력 중 임시 값, savedAnswer: 실제 등록된 값
+  const [draftAnswer, setDraftAnswer] = useState<string>("")
+  const [savedAnswer, setSavedAnswer] = useState<string | null>(null)
+  const [showAnswerModal, setShowAnswerModal] = useState(false)
 
   // Mock consultation data
   const consultationData: ConsultationData = {
@@ -65,19 +82,25 @@ export default function ConsultationDetailPage() {
 상세한 상담을 받고 싶습니다. 연락 주세요!`,
     phoneAvailable: true,
     unavailableHours: "평일 오전 9시-오후 6시 (업무시간)",
+    answer: savedAnswer,
   }
 
   useEffect(() => {
-    // Check if user is admin (mock check)
-    const adminStatus = localStorage.getItem("isAdmin") === "true"
-    setIsAdmin(adminStatus)
+    // Check if user is admin (Supabase session check)
+    const checkAdminStatus = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      const isAdminUser = !!session
+      setIsAdmin(isAdminUser)
 
-    // If admin or no password required, show content immediately
-    if (adminStatus || !consultationData.hasPassword) {
-      setIsAuthenticated(true)
+      // If admin or no password required, show content immediately
+      if (isAdminUser || !consultationData.hasPassword) {
+        setIsAuthenticated(true)
+      }
+
+      setIsLoading(false)
     }
 
-    setIsLoading(false)
+    checkAdminStatus()
   }, [])
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -87,7 +110,6 @@ export default function ConsultationDetailPage() {
     // Mock password validation
     if (password === "1234") {
       setIsAuthenticated(true)
-      // Increment view count
       console.log("[v0] Password verified, showing consultation content")
     } else {
       setError("비밀번호가 올바르지 않습니다.")
@@ -226,13 +248,11 @@ export default function ConsultationDetailPage() {
                 <Phone className="mr-2 h-5 w-5" />
                 연락 정보
               </h3>
-
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="p-4 bg-muted/50 rounded-lg">
                   <h4 className="font-medium mb-2">전화 상담</h4>
                   <p className="text-sm text-muted-foreground">{consultationData.phoneAvailable ? "가능" : "불가능"}</p>
                 </div>
-
                 {consultationData.phoneAvailable && consultationData.unavailableHours && (
                   <div className="p-4 bg-muted/50 rounded-lg">
                     <h4 className="font-medium mb-2 flex items-center">
@@ -245,6 +265,65 @@ export default function ConsultationDetailPage() {
               </div>
             </div>
 
+            {/* 답변 영역: shadcn/ui Dialog 컴포넌트로 수정된 부분 */}
+            {consultationData.answer ? (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="font-semibold text-green-700 mb-2">답변</div>
+                <div className="text-green-900 whitespace-pre-line">{consultationData.answer}</div>
+              </div>
+            ) : isAdmin ? (
+              <>
+                <Dialog open={showAnswerModal} onOpenChange={setShowAnswerModal}>
+
+                  <DialogContent
+                    className="sm:max-w-[425px]"
+                    aria-describedby="answer-desc"
+                    onInteractOutside={(e) => e.preventDefault()}
+                    onEscapeKeyDown={(e) => e.preventDefault()}
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                  >
+                    <DialogHeader>
+                      <DialogTitle>답변 작성</DialogTitle>
+                      {/* 접근성 설명 */}
+                      <DialogDescription id="answer-desc">
+                        관리자 답변을 입력하고 등록 버튼을 눌러 저장하세요. Enter는 줄바꿈, Ctrl+Enter는 등록 단축키로 사용할 수 있습니다.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <Textarea
+                        placeholder="답변 내용을 입력하세요."
+                        className="min-h-[120px] resize-none"
+                        value={draftAnswer}
+                        onChange={(e) => setDraftAnswer(e.target.value)}
+                        autoFocus
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button type="button" variant="secondary" onClick={() => { setShowAnswerModal(false); setDraftAnswer("") }}>
+                        취소
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          // 실제로는 여기서 Supabase에 답변을 저장하는 로직을 호출합니다.
+                          setSavedAnswer(draftAnswer)
+                          setShowAnswerModal(false);
+                          setDraftAnswer("")
+                        }}
+                        disabled={!draftAnswer || draftAnswer.trim() === ""}
+                      >
+                        등록
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </>
+            ) : (
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 text-center">
+                답변 대기중입니다.
+              </div>
+            )}
+
             {/* Admin Actions */}
             {isAdmin && (
               <>
@@ -256,7 +335,7 @@ export default function ConsultationDetailPage() {
                   <Button variant="destructive" size="sm">
                     삭제
                   </Button>
-                  <Button size="sm">답변하기</Button>
+                  <Button size="sm" onClick={() => setShowAnswerModal(true)}>답변하기</Button>
                 </div>
               </>
             )}
