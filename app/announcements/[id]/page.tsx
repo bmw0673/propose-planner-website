@@ -1,29 +1,21 @@
 import { notFound } from "next/navigation"
+import { headers } from "next/headers"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, Pin } from "lucide-react"
+import { Calendar } from "lucide-react"
 
-// 임시 데이터 (실제 서비스에서는 API 또는 DB에서 fetch)
-const announcements = [
-  {
-    id: 1,
-    title: "2024년 봄 시즌 프로포즈 패키지 출시",
-    content:
-      "벚꽃이 만개하는 봄을 맞아 특별한 봄 시즌 프로포즈 패키지를 출시합니다. 여의도 한강공원, 석촌호수, 남산 등 서울의 대표적인 벚꽃 명소에서 진행되는 로맨틱한 프로포즈를 경험해보세요.",
-    date: "2024.03.01",
-    type: "신규 서비스",
-    pinned: true,
-  },
-  // ... 나머지 공지 데이터 동일하게 복사 ...
-]
-
-interface AnnouncementDetailPageProps {
-  params: { id: string }
+async function getAnnouncement(id: string) {
+  const hdrs = headers()
+  const host = hdrs.get('host')
+  const proto = hdrs.get('x-forwarded-proto') || 'http'
+  const url = `${proto}://${host}/api/announcements?id=${id}`
+  const res = await fetch(url, { cache: 'no-store' })
+  if (!res.ok) return null
+  return res.json()
 }
 
-export default function AnnouncementDetailPage({ params }: AnnouncementDetailPageProps) {
-  const announcement = announcements.find((a) => String(a.id) === params.id)
-  if (!announcement) return notFound()
+export default async function AnnouncementDetailPage({ params }: { params: { id: string } }) {
+  const data = await getAnnouncement(params.id)
+  if (!data) return notFound()
 
   return (
     <main className="min-h-screen pt-16">
@@ -31,18 +23,18 @@ export default function AnnouncementDetailPage({ params }: AnnouncementDetailPag
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card>
             <CardHeader>
-              <div className="flex items-center space-x-3 mb-3">
-                {announcement.pinned && <Pin className="h-4 w-4 text-accent" />}
-                <Badge>{announcement.type}</Badge>
-                <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>{announcement.date}</span>
-                </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                <Calendar className="h-4 w-4" />
+                <span>{data.date}</span>
+                {data.pinned && <span className="ml-2 inline-block rounded bg-yellow-100 text-yellow-800 px-2 py-0.5 text-[10px]">고정</span>}
               </div>
-              <CardTitle className="text-2xl font-bold text-foreground mb-2">{announcement.title}</CardTitle>
+              <CardTitle className="text-2xl font-bold text-foreground mb-2">{data.title}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{announcement.content}</p>
+              <div className="rounded-lg overflow-hidden border mb-6">
+                <img src={data.image || "/placeholder.svg"} alt={data.title} className="w-full h-64 object-cover" />
+              </div>
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{data.content}</p>
             </CardContent>
           </Card>
         </div>

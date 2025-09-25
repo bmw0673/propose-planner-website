@@ -1,40 +1,39 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import NoticeEditor from "./notice-editor"
 
-interface Notice {
-  id: number
-  title: string
-  content: string
-  createdAt: string
-}
-
-const mockNotices: Notice[] = [
-  { id: 1, title: "6월 공지", content: "6월 이벤트 안내입니다.", createdAt: "2024-06-01" },
-  { id: 2, title: "5월 공지", content: "5월 휴무 안내입니다.", createdAt: "2024-05-01" },
-]
+type Notice = { id: string; title: string; content: string; excerpt?: string; image?: string | null; pinned?: boolean; createdAt: string }
 
 export default function NoticeManager() {
-  const [notices, setNotices] = useState<Notice[]>(mockNotices)
+  const [notices, setNotices] = useState<Notice[]>([])
   const [editing, setEditing] = useState<Notice | null>(null)
   const [isWriting, setIsWriting] = useState(false)
 
-  const handleSave = (title: string, content: string) => {
-    if (editing) {
-      setNotices((prev) => prev.map((n) => n.id === editing.id ? { ...n, title, content } : n))
-      setEditing(null)
-    } else {
-      setNotices((prev) => [
-        { id: Date.now(), title, content, createdAt: new Date().toISOString().slice(0, 10) },
-        ...prev,
-      ])
-    }
-    setIsWriting(false)
+  const load = async () => {
+    const res = await fetch(`/api/announcements?page=1&limit=50`)
+    const data = await res.json()
+    setNotices(
+      (data.announcements || []).map((a: any) => ({ id: a.id, title: a.title, content: a.excerpt || '', createdAt: a.date, pinned: a.pinned }))
+    )
   }
 
-  const handleDelete = (id: number) => {
-    setNotices((prev) => prev.filter((n) => n.id !== id))
+  useEffect(() => { load() }, [])
+
+  const handleSave = async (title: string, content: string) => {
+    if (editing) {
+      await fetch('/api/announcements', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: editing.id, title, content, excerpt: content.slice(0,120) }) })
+      setEditing(null)
+    } else {
+      await fetch('/api/announcements', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, content, excerpt: content.slice(0,120) }) })
+    }
+    setIsWriting(false)
+    await load()
+  }
+
+  const handleDelete = async (id: string) => {
+    await fetch(`/api/announcements?id=${id}`, { method: 'DELETE' })
+    await load()
   }
 
   return (
@@ -64,7 +63,7 @@ export default function NoticeManager() {
               <div className="flex justify-between items-center">
                 <div>
                   <div className="font-semibold">{notice.title}</div>
-                  <div className="text-xs text-muted-foreground">{notice.createdAt}</div>
+                  <div className="text-xs text-muted-foreground">{notice.createdAt}{notice.pinned ? ' · 고정' : ''}</div>
                 </div>
                 <div className="space-x-2">
                   <button

@@ -1,112 +1,49 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Calendar, Search, ArrowRight, PenTool, Lock, Eye } from "lucide-react"
+import LoadingSpinner from "@/components/loading-spinner"
 
 export default function ConsultationPage() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [items, setItems] = useState<any[]>([])
+  const loaderRef = useRef<HTMLDivElement | null>(null)
 
-  // Mock data for consultation posts
-  const consultations = [
-    {
-      id: 1,
-      title: "한강에서 프로포즈 상담 요청",
-      eventType: "야외 프로포즈",
-      author: "김**",
-      date: "2024.03.15",
-      isPrivate: true,
-      hasPassword: true,
-      views: 12,
-      answer: null,
-    },
-    {
-      id: 2,
-      title: "레스토랑 프로포즈 기획 문의",
-      eventType: "실내 프로포즈",
-      author: "이**",
-      date: "2024.03.14",
-      isPrivate: false,
-      hasPassword: false,
-      views: 8,
-      answer: "레스토랑 예약 및 이벤트 플랜 안내드렸습니다.",
-    },
-    {
-      id: 3,
-      title: "해변 선셋 프로포즈 상담",
-      eventType: "야외 프로포즈",
-      author: "박**",
-      date: "2024.03.13",
-      isPrivate: true,
-      hasPassword: true,
-      views: 15,
-      answer: null,
-    },
-    {
-      id: 4,
-      title: "호텔 루프탑 프로포즈 문의",
-      eventType: "실내 프로포즈",
-      author: "최**",
-      date: "2024.03.12",
-      isPrivate: true,
-      hasPassword: true,
-      views: 6,
-      answer: null,
-    },
-    {
-      id: 5,
-      title: "공원 피크닉 프로포즈 상담",
-      eventType: "야외 프로포즈",
-      author: "정**",
-      date: "2024.03.11",
-      isPrivate: false,
-      hasPassword: false,
-      views: 20,
-      answer: null,
-    },
-    {
-      id: 6,
-      title: "카페 프로포즈 기획 문의",
-      eventType: "실내 프로포즈",
-      author: "강**",
-      date: "2024.03.10",
-      isPrivate: true,
-      hasPassword: true,
-      views: 9,
-      answer: null,
-    },
-    {
-      id: 7,
-      title: "놀이공원 프로포즈 상담",
-      eventType: "테마 프로포즈",
-      author: "윤**",
-      date: "2024.03.09",
-      isPrivate: false,
-      hasPassword: false,
-      views: 18,
-      answer: null,
-    },
-    {
-      id: 8,
-      title: "집에서 서프라이즈 프로포즈",
-      eventType: "홈 프로포즈",
-      author: "조**",
-      date: "2024.03.08",
-      isPrivate: true,
-      hasPassword: true,
-      views: 11,
-      answer: null,
-    },
-  ]
+  const fetchPage = async (p: number) => {
+    const res = await fetch(`/api/consultations?page=${p}&limit=10`)
+    const data = await res.json()
+    setItems((prev) => {
+      const seen = new Set(prev.map((i) => String(i.id)))
+      const incoming = (data.consultations as any[]).filter((i) => !seen.has(String(i.id)))
+      const merged = [...prev, ...incoming]
+      return Array.from(new Map(merged.map(m => [String(m.id), m])).values())
+    })
+    setTotal(data.total)
+  }
 
-  const totalPages = Math.ceil(consultations.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const currentConsultations = consultations.slice(startIndex, startIndex + itemsPerPage)
+  useEffect(() => { fetchPage(1) }, [])
+
+  useEffect(() => {
+    if (!loaderRef.current) return
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const next = page + 1
+        const maxPage = Math.ceil(total / 10)
+        if (total === 0 || next <= maxPage) {
+          setPage(next)
+          fetchPage(next)
+        }
+      }
+    })
+    io.observe(loaderRef.current)
+    return () => io.disconnect()
+  }, [loaderRef.current, page, total])
 
   return (
     <main className="min-h-screen pt-16">
@@ -128,17 +65,25 @@ export default function ConsultationPage() {
         </div>
       </section>
 
+      {/* Count Section (blog와 동일한 레이아웃) */}
+      <section className="py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <h2 className="text-xl font-bold">전체 상담</h2>
+          <span className="text-sm text-muted-foreground">{items.length === 0 ? <LoadingSpinner size={16} /> : <>총 {total.toLocaleString()}개</>}</span>
+        </div>
+      </section>
+
       {/* Consultation List */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-2">상담신청 목록</h2>
-            <p className="text-muted-foreground">총 {consultations.length}개의 상담신청이 있습니다.</p>
-          </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8" />
 
           <div className="space-y-4">
-            {currentConsultations.map((consultation) => (
-              <Card key={consultation.id} className="hover:shadow-md transition-shadow duration-300">
+            {items.length === 0 && (
+              <div className="flex justify-center py-10"><LoadingSpinner size={40} /></div>
+            )}
+            {Array.from(new Map(items.map(c => [String(c.id), c])).values()).map((consultation) => (
+              <Card key={String(consultation.id)} className="hover:shadow-md transition-shadow duration-300">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
@@ -181,38 +126,8 @@ export default function ConsultationPage() {
             ))}
           </div>
 
-          {/* Pagination */}
-          <div className="flex justify-center items-center space-x-2 mt-12">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-            >
-              이전
-            </Button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Button
-                key={page}
-                variant={currentPage === page ? "default" : "outline"}
-                size="sm"
-                onClick={() => setCurrentPage(page)}
-                className="min-w-[40px]"
-              >
-                {page}
-              </Button>
-            ))}
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-            >
-              다음
-            </Button>
-          </div>
+          {/* Infinite sentinel */}
+          <div ref={loaderRef} className="h-1" />
         </div>
       </section>
     </main>

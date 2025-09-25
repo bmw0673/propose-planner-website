@@ -53,39 +53,30 @@ export default function ConsultationDetailPage() {
   const [savedAnswer, setSavedAnswer] = useState<string | null>(null)
   const [showAnswerModal, setShowAnswerModal] = useState(false)
 
-  // Mock consultation data
-  const consultationData: ConsultationData = {
-    id: Number(params.id),
-    title: "한강에서 프로포즈 상담 요청",
-    eventType: "야외 프로포즈",
-    author: "김민수",
-    phone: "010-1234-5678",
-    date: "2024.03.15",
-    views: 12,
-    hasPassword: true,
-    content: `안녕하세요. 다음 달 여자친구에게 프로포즈를 계획하고 있습니다.
-
-장소: 한강공원 (반포 무지개다리 근처)
-시간: 저녁 7시경 (일몰 시간)
-예산: 200-300만원
-인원: 2명 (저와 여자친구)
-
-특별한 요청사항:
-1. 꽃다발과 반지 준비
-2. 사진/영상 촬영 서비스
-3. 간단한 세팅 (캔들, 장미꽃잎 등)
-4. 날씨가 안 좋을 경우 대안 장소
-
-여자친구가 한강을 정말 좋아해서 이곳에서 프로포즈를 하고 싶습니다. 
-로맨틱하면서도 자연스러운 분위기를 원합니다.
-
-상세한 상담을 받고 싶습니다. 연락 주세요!`,
-    phoneAvailable: true,
-    unavailableHours: "평일 오전 9시-오후 6시 (업무시간)",
-    answer: savedAnswer,
-  }
+  const [consultationData, setConsultationData] = useState<ConsultationData | null>(null)
 
   useEffect(() => {
+    const fetchDetail = async () => {
+      const res = await fetch(`/api/consultations?id=${params.id}`)
+      const data = await res.json()
+      setConsultationData({
+        id: 0,
+        title: data.title,
+        eventType: data.eventType || '상담',
+        author: data.author || '익명',
+        phone: data.phone || '',
+        date: data.date,
+        views: data.views || 0,
+        hasPassword: !!data.hasPassword,
+        content: data.content,
+        phoneAvailable: true,
+        unavailableHours: undefined,
+        answer: savedAnswer ?? data.answer ?? null,
+      })
+    }
+
+    fetchDetail()
+
     // Check if user is admin (Supabase session check)
     const checkAdminStatus = async () => {
       const { data: { session } } = await supabase.auth.getSession()
@@ -93,7 +84,7 @@ export default function ConsultationDetailPage() {
       setIsAdmin(isAdminUser)
 
       // If admin or no password required, show content immediately
-      if (isAdminUser || !consultationData.hasPassword) {
+      if (isAdminUser || (consultationData && !consultationData.hasPassword)) {
         setIsAuthenticated(true)
       }
 
@@ -126,7 +117,7 @@ export default function ConsultationDetailPage() {
     )
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !consultationData) {
     return (
       <main className="min-h-screen pt-16">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -213,7 +204,7 @@ export default function ConsultationDetailPage() {
                 )}
               </div>
             </div>
-            <CardTitle className="text-2xl">{consultationData.title}</CardTitle>
+            <CardTitle className="text-2xl">{consultationData ? consultationData.title : ""}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Author Info */}
@@ -304,8 +295,8 @@ export default function ConsultationDetailPage() {
                       </Button>
                       <Button
                         type="button"
-                        onClick={() => {
-                          // 실제로는 여기서 Supabase에 답변을 저장하는 로직을 호출합니다.
+                        onClick={async () => {
+                          await fetch('/api/consultations', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: params.id, answer: draftAnswer }) })
                           setSavedAnswer(draftAnswer)
                           setShowAnswerModal(false);
                           setDraftAnswer("")

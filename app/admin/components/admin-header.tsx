@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase-client"
 
 interface AdminHeaderProps {
-  onTabChange: (tab: "consultation" | "notice") => void
-  activeTab: "consultation" | "notice"
+  onTabChange: (tab: "consultation" | "notice" | "blog") => void
+  activeTab: "consultation" | "notice" | "blog"
 }
 
 export default function AdminHeader({ onTabChange, activeTab }: AdminHeaderProps) {
@@ -26,7 +26,7 @@ export default function AdminHeader({ onTabChange, activeTab }: AdminHeaderProps
   }
 
   return (
-    <div className="flex w-full max-w-2xl justify-between items-center mb-8">
+      <div className="flex w-full max-w-2xl justify-between items-center mb-8">
       <div className="flex space-x-4">
         <button
           className={`px-4 py-2 rounded ${activeTab === "consultation" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
@@ -39,6 +39,12 @@ export default function AdminHeader({ onTabChange, activeTab }: AdminHeaderProps
           onClick={() => onTabChange("notice")}
         >
           공지사항 관리
+        </button>
+        <button
+          className={`px-4 py-2 rounded ${activeTab === "blog" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+          onClick={() => onTabChange("blog")}
+        >
+          블로그 관리
         </button>
       </div>
       <button
